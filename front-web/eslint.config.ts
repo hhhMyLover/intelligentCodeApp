@@ -19,4 +19,11 @@ export default defineConfigWithVueTs(
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
   skipFormatting,
+  
+  // 自定义规则
+  {
+    rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
+    },
+  },
 )

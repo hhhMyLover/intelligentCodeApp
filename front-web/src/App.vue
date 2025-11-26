@@ -1,11 +1,9 @@
 <template>
-  <div>
-    132
-  </div>
+  <MainLayout />
 </template>
 
 <script setup lang="ts">
-
+import MainLayout from './components/layout/MainLayout.vue';
 </script>
 
 <style scoped>
