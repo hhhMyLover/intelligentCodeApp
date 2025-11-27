@@ -2,6 +2,7 @@ package com.wzh.intelligentcodeapp.generator;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.setting.yaml.YamlUtil;
+import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.codegen.Generator;
 import com.mybatisflex.codegen.config.ColumnConfig;
 import com.mybatisflex.codegen.config.GlobalConfig;
@@ -52,6 +53,19 @@ public class IntelligentGenerator {
         globalConfig.enableEntity()
                 .setWithLombok(true)
                 .setJdkVersion(21);
+
+        // 配置主键生成策略为雪花算法
+        ColumnConfig idColumnConfig = new ColumnConfig();
+        idColumnConfig.setColumnName("id");
+        idColumnConfig.setKeyType(KeyType.Generator);
+        idColumnConfig.setKeyValue("KeyGenerators.snowFlakeId");
+        globalConfig.getStrategyConfig()
+                .setColumnConfig("id", idColumnConfig);
+
+        // 配置实体类生成策略
+        globalConfig.getEntityConfig()
+                .setWithActiveRecord(false)
+                .setOverwriteEnable(true);
 
         //设置生成 mapper
         globalConfig.enableMapper();
