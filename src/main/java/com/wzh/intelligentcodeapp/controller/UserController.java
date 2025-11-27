@@ -12,6 +12,7 @@ import com.wzh.intelligentcodeapp.model.request.UserListRequest;
 import com.wzh.intelligentcodeapp.model.request.UserLoginRequest;
 import com.wzh.intelligentcodeapp.model.request.UserRegisterRequest;
 import com.wzh.intelligentcodeapp.model.vo.LoginUserVO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,12 +43,14 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("register")
+    @Operation(description = "用户注册")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(userRegisterRequest), ErrorCode.PARAMS_ERROR);
         return ResultUtils.success(userService.userRegister(userRegisterRequest));
     }
 
     @PostMapping("login")
+    @Operation(description = "用户登录")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(userLoginRequest), ErrorCode.PARAMS_ERROR);
         User user = userService.userLogin(userLoginRequest, request);
@@ -55,12 +58,14 @@ public class UserController {
     }
 
     @GetMapping("getLoginUser")
+    @Operation(description = "获取当前登录用户")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getUserVO(user));
     }
 
     @PostMapping("logout")
+    @Operation(description = "用户登出")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         return ResultUtils.success(userService.userLogout(request));
     }
@@ -73,6 +78,7 @@ public class UserController {
      */
     @PostMapping("save")
     @AuthCheck(mustRole = "admin")
+    @Operation(description = "保存用户")
     public BaseResponse<Boolean> save(@RequestBody User user) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(user), ErrorCode.PARAMS_ERROR);
         // TODO 参数校验
@@ -87,6 +93,7 @@ public class UserController {
      */
     @DeleteMapping("remove/{id}")
     @AuthCheck(mustRole = "admin")
+    @Operation(description = "根据主键删除用户")
     public BaseResponse<Boolean> remove(@PathVariable Long id) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(id), ErrorCode.PARAMS_ERROR);
         return ResultUtils.success(userService.removeById(id));
@@ -99,6 +106,7 @@ public class UserController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
+    @Operation(description = "更新用户")
     public BaseResponse<Boolean> update(@RequestBody User user) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(user), ErrorCode.PARAMS_ERROR);
         return ResultUtils.success(userService.updateById(user));
@@ -111,6 +119,7 @@ public class UserController {
      */
     @GetMapping("list")
     @AuthCheck(mustRole = "admin")
+    @Operation(description = "查询所有用户")
     public BaseResponse<List<LoginUserVO>> list() {
         List<User> list = userService.list();
         return ResultUtils.success(userService.getUserVoList(list));
@@ -123,6 +132,7 @@ public class UserController {
      * @return 用户详情
      */
     @GetMapping("getInfo/{id}")
+    @Operation(description = "根据主键获取用户")
     public BaseResponse<LoginUserVO> getInfo(@PathVariable Long id) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(id), ErrorCode.PARAMS_ERROR);
         User user = userService.getById(id);
@@ -136,6 +146,7 @@ public class UserController {
      * @return 分页对象
      */
     @PostMapping("page")
+    @Operation(description = "分页查询用户")
     public BaseResponse<Page<LoginUserVO>>page(@RequestBody UserListRequest userListRequest) {
         Page<User> userPage = userService.page(Page.of(userListRequest.getCurrent(), userListRequest.getPageSize()), userService.getUserListQueryWrapper(userListRequest));
         List<User> records = userPage.getRecords();
