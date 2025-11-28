@@ -6,11 +6,9 @@
     <!-- 中部内容区域 -->
     <a-layout-content class="main-content">
       <div class="content-container">
-        <router-view v-slot="{ Component }">
-          <transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </transition>
-        </router-view>
+        <transition name="fade" mode="out-in">
+          <slot />
+        </transition>
       </div>
     </a-layout-content>
     

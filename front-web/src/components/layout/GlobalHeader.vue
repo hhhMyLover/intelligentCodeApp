@@ -15,7 +15,36 @@
         />
       </div>
       <div class="right-section">
-        <a-button type="primary" @click="handleLogin">登录</a-button>
+        <!-- 未登录：显示登录按钮 -->
+        <a-button v-if="!userStore.isLogin" type="primary" @click="handleLogin">登录</a-button>
+        
+        <!-- 已登录：显示用户头像或账号首字母 -->
+        <a-dropdown v-else>
+          <div class="user-avatar-container">
+            <!-- 有头像：显示头像 -->
+            <a-avatar v-if="userStore.userInfo?.userAvatar" :size="50" :src="userStore.userInfo.userAvatar" />
+            <!-- 无头像：显示账号首字母 -->
+            <a-avatar v-else :size="50" style="background-color: #1890ff">
+              {{ userStore.userInfo?.userAccount?.charAt(0).toUpperCase() || 'U' }}
+            </a-avatar>
+          </div>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="profile">
+                <UserOutlined />
+                个人中心
+              </a-menu-item>
+              <a-menu-item key="settings">
+                <SettingOutlined />
+                设置
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="logout" @click="handleLogout">
+                <span style="color: #ff4d4f">退出登录</span>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
     </div>
   </a-layout-header>
@@ -24,16 +53,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { message, Modal } from 'ant-design-vue';
 import type { MenuProps } from 'ant-design-vue';
 import {
   HomeOutlined,
   AppstoreOutlined,
   UserOutlined,
-  SettingOutlined
+  SettingOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons-vue';
 import { h } from 'vue';
+import { useUserStore } from '@/stores/user';
 
 const router = useRouter();
+const userStore = useUserStore();
 const selectedKeys = ref<string[]>(['home']);
 
 const menuItems: MenuProps['items'] = [
@@ -66,9 +99,22 @@ const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
 };
 
 const handleLogin = () => {
-  console.log('Login clicked');
-  // 跳转到登录页面
-  // router.push('/login');
+  router.push('/login');
+};
+
+const handleLogout = () => {
+  Modal.confirm({
+    title: '确认退出',
+    icon: h(ExclamationCircleOutlined),
+    content: '确定要退出登录吗？',
+    okText: '确定',
+    cancelText: '取消',
+    onOk() {
+      userStore.clearUserInfo();
+      message.success('已退出登录');
+      router.push('/');
+    },
+  });
 };
 </script>
 
@@ -131,6 +177,17 @@ const handleLogin = () => {
 .right-section {
   display: flex;
   align-items: center;
+}
+
+.user-avatar-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+}
+
+.user-avatar-container:hover {
+  opacity: 0.8;
 }
 
 /* 响应式设计 */
