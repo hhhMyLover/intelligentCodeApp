@@ -68,13 +68,13 @@
 
         <!-- 第三方登录 -->
         <div class="social-login">
-          <a-button class="social-button" size="large" @click="handleSocialLogin('github')">
+          <a-button class="social-button" size="large" @click="handleSocialLogin('GitHub')">
             <GithubOutlined />
-            GitHub
+            GitHub 登录
           </a-button>
-          <a-button class="social-button" size="large" @click="handleSocialLogin('wechat')">
+          <a-button class="social-button" size="large" @click="handleSocialLogin('微信')">
             <WechatOutlined />
-            微信
+            微信登录
           </a-button>
         </div>
       </div>

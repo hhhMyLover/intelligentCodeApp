@@ -25,7 +25,7 @@
             <a-avatar v-if="userStore.userInfo?.userAvatar" :size="50" :src="userStore.userInfo.userAvatar" />
             <!-- 无头像：显示账号首字母 -->
             <a-avatar v-else :size="50" style="background-color: #1890ff">
-              {{ userStore.userInfo?.userAccount?.charAt(0).toUpperCase() || 'U' }}
+              {{ userStore.userInfo?.userName?.charAt(0).toUpperCase() || 'U' }}
             </a-avatar>
           </div>
           <template #overlay>
@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { message, Modal } from 'ant-design-vue';
 import type { MenuProps } from 'ant-design-vue';
 import {
@@ -60,16 +60,36 @@ import {
   AppstoreOutlined,
   UserOutlined,
   SettingOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  TeamOutlined
 } from '@ant-design/icons-vue';
 import { h } from 'vue';
 import { useUserStore } from '@/stores/user';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
-const selectedKeys = ref<string[]>(['home']);
 
-const menuItems: MenuProps['items'] = [
+// 根据当前路由设置选中的菜单项
+const getSelectedKeyFromRoute = () => {
+  const path = route.path;
+  if (path === '/') {
+    return ['home'];
+  }
+  // 移除开头的斜杠
+  const key = path.substring(1);
+  return [key];
+};
+
+const selectedKeys = ref<string[]>(getSelectedKeyFromRoute());
+
+// 监听路由变化，更新选中的菜单项
+watch(() => route.path, () => {
+  selectedKeys.value = getSelectedKeyFromRoute();
+});
+
+// 定义所有菜单项（包括需要权限的）
+const allMenuItems = [
   {
     key: 'home',
     icon: () => h(HomeOutlined),
@@ -86,16 +106,39 @@ const menuItems: MenuProps['items'] = [
     label: '关于',
   },
   {
+    key: 'admin/user',
+    icon: () => h(TeamOutlined),
+    label: '用户管理',
+  },
+  {
     key: 'settings',
     icon: () => h(SettingOutlined),
     label: '设置',
   },
 ];
 
+// 根据用户权限过滤菜单项
+const menuItems = computed<MenuProps['items']>(() => {
+  const isAdmin = userStore.userInfo?.userRole === 'admin';
+  
+  return allMenuItems.filter(item => {
+    // 如果菜单项的 key 以 'admin' 开头，只有管理员才能看到
+    if (item.key.startsWith('admin')) {
+      return isAdmin;
+    }
+    // 其他菜单项都可以看到
+    return true;
+  });
+});
+
 const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
   console.log('Menu clicked:', key);
-  // 可以根据key进行路由跳转
-  // router.push(`/${key}`);
+  // 路由跳转
+  if (key === 'home') {
+    router.push('/');
+  } else {
+    router.push(`/${key}`);
+  }
 };
 
 const handleLogin = () => {

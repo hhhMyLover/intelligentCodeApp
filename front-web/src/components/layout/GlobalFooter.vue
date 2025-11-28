@@ -23,8 +23,8 @@
         </div>
       </div> -->
       <div class="footer-bottom">
-        <p>&copy; {{ currentYear }} 智能代码应用. All rights reserved.</p>
-        <p class="footer-version">Version 1.0.0</p>
+        <p>&copy; {{ currentYear }} 智能代码应用. 保留所有权利.</p>
+        <p class="footer-version">版本 1.0.0</p>
       </div>
     </div>
   </a-layout-footer>

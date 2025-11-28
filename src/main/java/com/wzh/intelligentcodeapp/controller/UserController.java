@@ -14,6 +14,8 @@ import com.wzh.intelligentcodeapp.model.request.UserRegisterRequest;
 import com.wzh.intelligentcodeapp.model.vo.LoginUserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +41,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
 
@@ -82,6 +85,9 @@ public class UserController {
     public BaseResponse<Boolean> save(@RequestBody User user) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(user), ErrorCode.PARAMS_ERROR);
         // TODO 参数校验
+        user.setUserPassword("123456");
+        user.setUserPassword(userService.encryptPassword(user.getUserPassword()));
+
         return ResultUtils.success(userService.save(user));
     }
 
@@ -109,6 +115,8 @@ public class UserController {
     @Operation(description = "更新用户")
     public BaseResponse<Boolean> update(@RequestBody User user) {
         ThrowUtils.throwIf(ObjectUtil.isEmpty(user), ErrorCode.PARAMS_ERROR);
+        String encryptPassword = userService.encryptPassword(user.getUserPassword());
+        user.setUserPassword(encryptPassword);
         return ResultUtils.success(userService.updateById(user));
     }
 
