@@ -6,6 +6,9 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  profiles:
+    active: local
 server:
   port: 8081
   servlet:
@@ -17,3 +20,15 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.wzh.intelligentcodeapp.controller
+
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: ${ALI_YUN_API_KEY}
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen-plus
+      timeout: 600s
+      log-requests: true
+      log-responses: true
+      # 是否严格检查json
+      strict-json-schema: true
