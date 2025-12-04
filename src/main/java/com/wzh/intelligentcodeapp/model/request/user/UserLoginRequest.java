@@ -1,4 +1,4 @@
-package com.wzh.intelligentcodeapp.model.request;
+package com.wzh.intelligentcodeapp.model.request.user;
 
 import lombok.Data;
 

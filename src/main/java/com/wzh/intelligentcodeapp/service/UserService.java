@@ -3,9 +3,9 @@ package com.wzh.intelligentcodeapp.service;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import com.wzh.intelligentcodeapp.model.entity.User;
-import com.wzh.intelligentcodeapp.model.request.UserListRequest;
-import com.wzh.intelligentcodeapp.model.request.UserLoginRequest;
-import com.wzh.intelligentcodeapp.model.request.UserRegisterRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserListRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserLoginRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserRegisterRequest;
 import com.wzh.intelligentcodeapp.model.vo.LoginUserVO;
 import jakarta.servlet.http.HttpServletRequest;
 
