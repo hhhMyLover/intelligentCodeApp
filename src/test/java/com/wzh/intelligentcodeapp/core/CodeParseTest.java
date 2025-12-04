@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CodeParserTest {
+class CodeParseTest {
 
     @Test
     void parseHtmlCode() {

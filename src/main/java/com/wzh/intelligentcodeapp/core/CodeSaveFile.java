@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@Deprecated
 @Component
 public class CodeSaveFile {
     public static final String ROOT_DIR_PATH = System.getProperty("user.dir") + "/tem/code_output";
