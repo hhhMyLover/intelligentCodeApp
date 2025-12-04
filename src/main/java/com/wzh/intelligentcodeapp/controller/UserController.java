@@ -1,6 +1,5 @@
 package com.wzh.intelligentcodeapp.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.mybatisflex.core.paginate.Page;
 import com.wzh.intelligentcodeapp.annotation.AuthCheck;
@@ -8,9 +7,9 @@ import com.wzh.intelligentcodeapp.common.BaseResponse;
 import com.wzh.intelligentcodeapp.common.ResultUtils;
 import com.wzh.intelligentcodeapp.exception.ErrorCode;
 import com.wzh.intelligentcodeapp.exception.ThrowUtils;
-import com.wzh.intelligentcodeapp.model.request.UserListRequest;
-import com.wzh.intelligentcodeapp.model.request.UserLoginRequest;
-import com.wzh.intelligentcodeapp.model.request.UserRegisterRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserListRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserLoginRequest;
+import com.wzh.intelligentcodeapp.model.request.user.UserRegisterRequest;
 import com.wzh.intelligentcodeapp.model.vo.LoginUserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ import com.wzh.intelligentcodeapp.model.entity.User;
 import com.wzh.intelligentcodeapp.service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
