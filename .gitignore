@@ -6,6 +6,7 @@ target/
 
 ### 本地 ###
 application-local.yml
+tem
 
 ### STS ###
 .apt_generated
