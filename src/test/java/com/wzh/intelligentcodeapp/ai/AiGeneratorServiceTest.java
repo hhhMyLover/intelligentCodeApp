@@ -2,6 +2,7 @@ package com.wzh.intelligentcodeapp.ai;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.lang.Assert;
 import com.wzh.intelligentcodeapp.ai.model.HtmlCodeResult;
 import com.wzh.intelligentcodeapp.ai.model.MultiFileCodeResult;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +46,11 @@ class AiGeneratorServiceTest {
         FileUtil.writeUtf8String(projectCode.getCssCode()+projectCode.getHtmlCode()+projectCode.getJsCode(), file);
         log.info("生成文件成功：{}", file.getAbsolutePath());
         log.info("projectCode:{}",projectCode);
+    }
+
+    @Test
+    void generateName() {
+        String generateAppName = aiGeneratorService.generateAppName("自制饮品教程（咖啡、奶茶、气泡水）、食材采购清单");
+        Assert.notNull(generateAppName);
     }
 }
