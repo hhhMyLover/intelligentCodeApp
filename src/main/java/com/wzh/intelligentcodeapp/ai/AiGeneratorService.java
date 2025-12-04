@@ -20,4 +20,7 @@ public interface AiGeneratorService {
 
     @SystemMessage(fromResource = "prompt/project-sys-prompt.txt")
     Flux<String> generateProjectCodeStream(String prompt);
+
+    @SystemMessage(fromResource = "prompt/app-name-sys-prompt.txt")
+    String generateAppName(String prompt);
 }
