@@ -32,3 +32,10 @@ langchain4j:
       log-responses: true
       # 是否严格检查json
       strict-json-schema: true
+    streaming-chat-model:
+      api-key: ${ALI_YUN_API_KEY}
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      model-name: qwen-plus
+      timeout: 600s
+      log-requests: true
+      log-responses: true

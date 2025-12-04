@@ -1,6 +1,7 @@
 package com.wzh.intelligentcodeapp.ai;
 
 import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +13,21 @@ public class AiGeneratorServiceFactory {
     @Resource
     private ChatModel chatModel;
 
+    @Resource
+    private StreamingChatModel streamingChatModel;
+
+//    @Bean
+//    public AiGeneratorService createAiGeneratorService(){
+//        return AiServices.builder(AiGeneratorService.class)
+//                .chatModel(chatModel)
+//                .build();
+//    }
+
     @Bean
-    public AiGeneratorService createAiGeneratorService(){
+    public AiGeneratorService createAiGeneratorServiceStream(){
         return AiServices.builder(AiGeneratorService.class)
                 .chatModel(chatModel)
+                .streamingChatModel(streamingChatModel)
                 .build();
     }
 }
