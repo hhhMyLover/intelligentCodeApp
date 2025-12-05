@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.wzh.intelligentcodeapp.ai.AiGeneratorService;
+import com.wzh.intelligentcodeapp.constant.AppPriorityConstant;
 import com.wzh.intelligentcodeapp.exception.BusinessException;
 import com.wzh.intelligentcodeapp.exception.ErrorCode;
 import com.wzh.intelligentcodeapp.model.entity.App;
@@ -17,6 +18,7 @@ import com.wzh.intelligentcodeapp.model.request.app.AppAdminUpdateRequest;
 import com.wzh.intelligentcodeapp.model.request.app.AppListRequest;
 import com.wzh.intelligentcodeapp.model.request.app.AppUpdateRequest;
 import com.wzh.intelligentcodeapp.model.vo.AppVO;
+import com.wzh.intelligentcodeapp.model.vo.LoginUserVO;
 import com.wzh.intelligentcodeapp.service.AppService;
 import com.wzh.intelligentcodeapp.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 应用 服务层实现。
@@ -60,7 +65,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
 
         // 3. 创建应用
         App app = new App();
-        String generateAppName = aiGeneratorService.generateAppName(appName);
+        String generateAppName = aiGeneratorService.generateAppName(initPrompt);
         app.setAppName(generateAppName);
         app.setInitPrompt(initPrompt);
         app.setUserId(loginUser.getId());
@@ -170,7 +175,16 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         if (CollUtil.isEmpty(list)) {
             return new ArrayList<>();
         }
-        return list.stream().map(this::getAppVO).toList();
+        Set<Long> collect = list.stream().map(App::getId).collect(Collectors.toSet());
+        List<User> userList = userService.listByIds(collect);
+        List<LoginUserVO> userVoList = userService.getUserVoList(userList);
+        Map<Long, LoginUserVO> userMap = userVoList.stream().collect(Collectors.toMap(LoginUserVO::getId, loginUserVO -> loginUserVO));
+        return list.stream().map(app -> {
+            AppVO appVO = new AppVO();
+            BeanUtil.copyProperties(app, appVO);
+            appVO.setUser(userMap.get(app.getUserId()));
+            return appVO;
+        }).toList();
     }
 
     @Override
@@ -206,6 +220,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         if (request.getUserId() != null) {
             queryWrapper.eq(App::getUserId, request.getUserId());
         }
+        queryWrapper.orderBy(App::getCreateTime);
         return queryWrapper;
     }
 
@@ -214,7 +229,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements AppSe
         QueryWrapper queryWrapper = new QueryWrapper();
         // 精选应用：优先级不为空且大于0
         queryWrapper.isNotNull(App::getPriority)
-                .gt(App::getPriority, 0);
+                .gt(App::getPriority, AppPriorityConstant.DEFAULT_PRIORITY);
         // 支持根据名称模糊查询
         if (request != null && StrUtil.isNotEmpty(request.getAppName())) {
             queryWrapper.like(App::getAppName, request.getAppName());
